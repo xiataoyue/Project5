@@ -89,8 +89,30 @@ T *Dlist<T>::remove(bool (*cmp)(const T*, const T*), T* ref){
     while(temp != NULL){
         if(cmp(temp->op, ref)){
             T *tmp = temp->op;
-            temp->prev->next = temp->next;
-            temp->next->prev = temp->prev;
+            if(temp == first){
+                if(temp->next == NULL){
+                    first = NULL;
+                    last = NULL;
+                }
+                else{
+                    first = temp->next;
+                    first->prev = NULL;
+                }
+            }
+            else if(temp == last){
+                if(temp->prev == NULL){
+                    first = NULL;
+                    last = NULL;
+                }
+                else{
+                    last = last->prev;
+                    last->next = NULL;
+                }
+            }
+            else{
+                temp->prev->next = temp->next;
+                temp->next->prev = temp->prev;
+            }
             delete temp;
             temp = NULL;
             return tmp;
@@ -121,10 +143,15 @@ Dlist<T>::~Dlist(){
 template <class T>
 void Dlist<T>::removeAll() {
     while(first != NULL && last != NULL && first != last){
-        removeFront();
-        removeBack();
+        T *temp1 = removeFront();
+        T *temp2 = removeBack();
+        delete temp1;
+        delete temp2;
     }
-    if(first == last && first != NULL) removeFront();
+    if(first == last && first != NULL) {
+        T *temp = removeFront();
+        delete temp;
+    }
 }
 
 template <class T>
@@ -133,7 +160,8 @@ void Dlist<T>::copyAll(const Dlist<T> &l) {
     if(!isEmpty()) removeAll();
     node *temp = l.first;
     while(temp != NULL){
-        insertBack(temp->op);
+        T *ip = new T(*temp->op);
+        insertBack(ip);
         temp = temp->next;
     }
 }

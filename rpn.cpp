@@ -62,12 +62,18 @@ int main() {
                 while((!stack.empty()) && ((*stack.top() == '*' || *stack.top() == '/') || (input[i] == "+" || input[i] == "-")) && (*stack.top() != '(')){
                     output += *stack.top();
                     output += " ";
+                    char *p = stack.top();
                     stack.pop();
+                    delete p;
                 }
-                stack.push(const_cast<char *>(input[i].c_str()));
+                string x = input[i];
+                char *cc = new char(x[0]);
+                stack.push(cc);
             }
             else if(input[i] == "(") {
-                stack.push(const_cast<char *>(input[i].c_str()));
+                string x = input[i];
+                char *cc = new char(x[0]);
+                stack.push(cc);
             }
             else if(input[i] == ")") {
                 if(stack.empty()){
@@ -75,15 +81,19 @@ int main() {
                     throw err;
                 }
                 while(*stack.top() != '(') {
-                    output += stack.top();
+                    output += *stack.top();
                     output += " ";
+                    char *p = stack.top();
                     stack.pop();
+                    delete p;
                     if(stack.empty()) {
                         string error = "ERROR: Parenthesis mismatch";
                         throw error;
                     }
                 }
+                char *pp = stack.top();
                 stack.pop();
+                delete pp;
             }
             else{
                 output += input[i];
@@ -97,7 +107,9 @@ int main() {
             }
             output += *stack.top();
             output += " ";
+            char *p = stack.top();
             stack.pop();
+            delete p;
         }
         cout << output << endl;
 
