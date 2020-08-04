@@ -45,6 +45,10 @@ int main() {
     int count = 0;
     string str;
     getline(cin, str);
+    if(str.empty()){
+    	cout << "No input!" << endl;
+		return 0;
+	} 
     Istream.str(str);
 
     while(Istream){
